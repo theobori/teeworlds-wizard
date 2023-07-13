@@ -1,0 +1,33 @@
+{
+  "name": "teeworlds-wizard",
+  "version": "1.0.0",
+  "description": "Discord bot manipulating Teeworlds assets",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theobori/teeworlds-wizard.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/theobori/teeworlds-wizard.git/issues"
+  },
+  "homepage": "https://github.com/theobori/teeworlds-wizard.git#readme",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "canvas": "^2.9.1",
+    "color-convert": "^2.0.1",
+    "discord.js": "^14.11.0",
+    "dotenv": "^10.0.0",
+    "fs": "^0.0.1-security",
+    "mongoose": "^6.5.2",
+    "path": "^0.12.7",
+    "teeworlds-utilities": "^1.1.5",
+    "ts-node": "^10.9.1",
+    "uuid": "^9.0.0"
+  }
+}

@@ -1,0 +1,60 @@
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+*.swp
+
+pids
+results
+tmp
+
+# Build
+public/css/main.css
+
+# Coverage reports
+coverage
+
+# API keys and secrets
+.env
+mongo.env
+
+# Dependency directory
+node_modules
+bower_components
+
+# Editors
+.idea
+*.iml
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Ignore built ts files
+dist/**/*
+
+# ignore yarn.lock
+yarn.lock
+
+# todos
+todo
+
+# transpiled files (.js)
+build/
+
+# Useless
+tsconfig.tsbuildinfo
+
+# Useless package.json immutable
+package-lock.json
+
+# Personal script
+run.sh
+dev.sh
+
+test.ts
+tests
