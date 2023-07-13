@@ -49,9 +49,6 @@ build/
 # Useless
 tsconfig.tsbuildinfo
 
-# Useless package.json immutable
-package-lock.json
-
 # Personal script
 run.sh
 dev.sh
