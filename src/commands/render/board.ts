@@ -7,75 +7,13 @@ import {
   Message,
 } from 'discord.js';
 
+
 import Bot from '../../bot';
 import ICommand from '../../interfaces/command';
-import parseCommandOptions from '../../utils/commandOptions';
 import { unlinkSync } from 'fs';
-import { SkinInteraction } from '../../services/renderSkin';
+import { BoardInteraction } from '../../services/renderSkin';
+import parseCommandOptions from '../../utils/commandOptions';
 import ErrorEmbed from '../../utils/msg';
-
-const eyeArgument: any = {
-  name: 'eyes',
-  type: ApplicationCommandOptionType.String,
-  required: false,
-  description: 'The skin eyes state',
-  choices: [
-    {
-      name: 'default',
-      value: 'default_eye'
-    }, 
-    {
-      name: 'angry',
-      value: 'angry_eye'
-    },
-    {
-      name: 'blink',
-      value: 'blink_eye'
-    },
-    {
-      name: 'happy',
-      value: 'happy_eye'
-    },
-    {
-      name: 'cross',
-      value: 'cross_eye'
-    },
-    {
-      name: 'scary',
-      value: 'scary_eye'
-    }
-  ]
-};
-
-const weaponArgument: any = {
-  name: 'weapon',
-  type: ApplicationCommandOptionType.String,
-  required: false,
-  description: 'The tee weapon',
-  choices: [
-    {
-      name: 'Hammer',
-      value: 'hammer'
-    }, 
-    {
-      name: 'Gun',
-      value: 'gun'
-    },
-    {
-      name: 'Shotgun',
-      value: 'shotgun'
-    },
-    {
-      name: 'Grenade',
-      value: 'grenade'
-    },
-    {
-      name: 'Laser',
-      value: 'laser'
-    }
-  ]
-};
-
 
 const colorModesArgument = {
   name: 'colormode',
@@ -99,7 +37,7 @@ const colorModesArgument = {
   ]
 };
 
-const renderOptionalArguments = [
+const renderOptionalArguments: any = [
   {
     name: 'crop',
     type: ApplicationCommandOptionType.Boolean,
@@ -112,14 +50,18 @@ const renderOptionalArguments = [
     description: 'The direction in which the tee looks',
     required: false
   },
-  weaponArgument,
   {
     name: 'gameskin',
     type: ApplicationCommandOptionType.Attachment,
     required: false,
     description: 'The skin image (it takes priority over the url)',
   },
-  eyeArgument
+  {
+    name: 'amount',
+    type: ApplicationCommandOptionType.Number,
+    required: false,
+    description: 'Skin emote and weapon on the board',
+  },
 ];
 
 export default class implements ICommand {
@@ -130,13 +72,13 @@ export default class implements ICommand {
   options: ApplicationCommandOption[];
     
   constructor() {
-    this.name = 'render';
+    this.name = 'board';
     this.category = 'render';
-    this.description = 'Render a Teeworlds skin';
+    this.description = 'Creates a view with an assembled skin for each emote associated with a weapon';
     this.options = [
       {
         name: 'default',
-        description: 'Render a Teeworlds skin ',
+        description: 'Creates a board ',
         type: ApplicationCommandOptionType.Subcommand,
         options: [
           {
@@ -150,7 +92,7 @@ export default class implements ICommand {
       },
       {
         name: 'color',
-        description: 'Render a Teeworlds skin with custom colors',
+        description: 'Creates a board with custom colors',
         type: ApplicationCommandOptionType.Subcommand,
         options: [
           {
@@ -189,13 +131,13 @@ export default class implements ICommand {
 
     await interaction.deferReply({ ephemeral: true });
 
-    const skinInteraction = new SkinInteraction()
+    const boardInteraction = new BoardInteraction()
       .setInteraction(interaction)
       .setOptions(options)
       .setSubCommand(subCommand);
   
     // config
-    if (await skinInteraction.load() === false) {
+    if (await boardInteraction.load() === false) {
       await interaction.followUp(
         {
           embeds: [ ErrorEmbed.wrong() ],
@@ -206,9 +148,11 @@ export default class implements ICommand {
       return;
     }
     
-    await skinInteraction.process();
-    await skinInteraction.send();
+    await boardInteraction.process();
+    await boardInteraction.send();
 
-    unlinkSync(skinInteraction.path);
+    unlinkSync(boardInteraction.path);
+
   };
 }
+

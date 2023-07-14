@@ -1,5 +1,5 @@
 import { Collection } from 'discord.js';
-import { Bot } from '../bot';
+import Bot from '../bot';
 import { Logger } from '../services/logs';
 
 async function cacheInvite(bot: Bot) {

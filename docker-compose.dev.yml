@@ -12,7 +12,7 @@ services:
 
   # Discord bot
   asset_bot:
-    image: node:latest
+    image: node:18
     container_name: asset_bot
     working_dir: /bot
     volumes:

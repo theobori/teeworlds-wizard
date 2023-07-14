@@ -3,7 +3,7 @@ import {
   Interaction 
 } from 'discord.js';
 
-import { Bot } from '../bot';
+import Bot from '../bot';
 import { Logger } from '../services/logs';
 
 export default function interactionCreate(

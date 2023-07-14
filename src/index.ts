@@ -1,7 +1,7 @@
 import { Partials } from 'discord.js';
 import 'dotenv/config';
 
-import { Bot } from './bot';
+import Bot from './bot';
 
 function main() {
   const client = new Bot(

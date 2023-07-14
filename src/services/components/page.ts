@@ -18,7 +18,10 @@ export interface IPageComponent {
   reply: () => void;
 }
 
-abstract class AbstractPageComponent<T> extends Page<T> implements IPageComponent {
+export default abstract class AbstractPageComponent<T>
+  extends Page<T>
+  implements IPageComponent
+{
   protected message: CommandInteraction<CacheType>;
 
   protected previousId: string;
@@ -108,5 +111,3 @@ abstract class AbstractPageComponent<T> extends Page<T> implements IPageComponen
     await this.message.reply(this.createOptions());
   }
 }
-
-export default AbstractPageComponent;

@@ -5,7 +5,7 @@ import {
   Message 
 } from 'discord.js';
 
-import { Bot } from '../bot';
+import Bot from '../bot';
 import { hasImplemented } from '../utils/implemented';
 
 export default interface ICommand {

@@ -11,7 +11,7 @@ import {
 } from 'discord.js';
 import { join } from 'path';
 
-import { Bot } from '../../bot';
+import Bot from '../../bot';
 import ICommand, { isICommand } from '../../interfaces/command';
 import AbstractPageComponent from '../../services/components/page';
 import capitalize from '../../utils/capitalize';

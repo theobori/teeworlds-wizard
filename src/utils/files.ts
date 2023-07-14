@@ -51,6 +51,13 @@ export const files = {
 
   append(path: PathOrFileDescriptor, data: string) {
     appendFileSync(path, data);
-  }
+  },
 
+  getName(path: string): string {
+    return path
+      .split('/')
+      .at(-1)
+      .split(".")
+      .at(0);
+  }
 }
