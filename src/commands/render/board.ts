@@ -7,35 +7,13 @@ import {
   Message,
 } from 'discord.js';
 
-
 import Bot from '../../bot';
-import ICommand from '../../interfaces/command';
+import ICommand from '../../command';
 import { unlinkSync } from 'fs';
 import { BoardInteraction } from '../../services/renderSkin';
 import parseCommandOptions from '../../utils/commandOptions';
 import ErrorEmbed from '../../utils/msg';
-
-const colorModesArgument = {
-  name: 'colormode',
-  type: ApplicationCommandOptionType.String,
-  description: 'The skin color mode',
-  required: true,
-  choices: [
-    {
-      name: 'RGB',
-      value: 'rgb',
-      
-    }, 
-    {
-      name: 'HSL',
-      value: 'hsl'
-    },
-    {
-      name: 'Teeworlds code',
-      value: 'code',
-    }
-  ]
-};
+import { colorModesArgument } from '../../utils/commonArguments';
 
 const renderOptionalArguments: any = [
   {
@@ -60,8 +38,8 @@ const renderOptionalArguments: any = [
     name: 'amount',
     type: ApplicationCommandOptionType.Number,
     required: false,
-    description: 'Skin emote and weapon on the board',
-  },
+    description: 'The skin emote and weapon amount on the board',
+  }
 ];
 
 export default class implements ICommand {

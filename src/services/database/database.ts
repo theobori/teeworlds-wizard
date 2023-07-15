@@ -23,7 +23,7 @@ export default class Mongo {
       const client = new MongoClient(process.env.MONGO);
       const db = client.db(process.env.DATABASE);
       const collections = {
-        'invite': db.collection('invite')
+        'listener': db.collection('listener')
       };
 
       Mongo.conn = { client, db, collections };

@@ -1,6 +1,6 @@
 import {
   CommandInteractionOption,
-  Interaction 
+  Interaction
 } from 'discord.js';
 
 import Bot from '../bot';

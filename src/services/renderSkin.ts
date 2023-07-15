@@ -14,7 +14,7 @@ import { WeaponGameSkinPart } from 'teeworlds-utilities/build/main/asset/part';
 import { ParsedOptions } from '../utils/commandOptions';
 import configSkin from './configSkin';
 
-const defaultGameskin = 'https://api.skins.tw/database/gameskins/bqVvDeFntMhHGu7ith8RhhJ182eynFsndbCZKXFG.png';
+export const defaultGameskin = 'data/0_6.png';
 
 export interface ISkinInteraction {
   path: string;
@@ -71,8 +71,6 @@ abstract class AbstractSkinInteraction implements ISkinInteraction {
     
     // Set the skin url
     this.skin.setName(this.options.image.url);
-
-    
 
     return true;
   }
@@ -162,7 +160,7 @@ export class SkinInteraction extends AbstractSkinInteraction {
     const embed = new EmbedBuilder()
       .setURL(url)
       .setImage('attachment://' + this.path)
-      .setColor(0x000000);
+      .setColor(0x2b2d31);
     
     const skinUrl = this.skin.metadata.name;
     const gamekinUrl = this.gameskin.metadata.name;
@@ -175,7 +173,10 @@ export class SkinInteraction extends AbstractSkinInteraction {
       }
     );
     
-    if (this.hasWeapon === true) {
+    if (
+      this.hasWeapon === true &&
+      this.gameskin.metadata.name !== defaultGameskin
+    ) {
       embed.addFields([
         {
           name: 'Gameskin',

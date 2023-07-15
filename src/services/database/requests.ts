@@ -2,72 +2,73 @@ import {
   FindCursor,
   Document,
   WithId,
-  UpdateResult
+  UpdateResult,
+  DeleteResult
 } from 'mongodb';
 
 import database from "./database";
+import { IListener, listenerValues } from '../listener';
+
+function filterFromListener(
+  listener: IListener
+): {[key: string]: any} {
+  let filter = {};
+
+  for (const k of Object.keys(listenerValues)) {
+    if (listener[k]) {
+      filter[listenerValues[k]] = listener[k];
+    }
+  }
+
+  return filter;
+}
 
 class RequestsDatabase {
-  static getTopInvites(
-    guildId: string,
-    limit: number
+  static getListeners(
+    listener: IListener
   ): FindCursor<WithId<Document>> {
-    return database.collections['invite']
-    .find(
-      {
-        'guild_id': guildId,
-      }
-    )
-    .limit(limit)
-    .sort(
-      {
-        'invites': -1
-      }
-    );
+    return database.collections['listener']
+      .find(
+        filterFromListener(listener)
+      );
   }
 
-  static async updateInviter(
-    guildId: string,
-    clientId: string
+  static async updateListener(
+    listener: IListener
   ): Promise<UpdateResult> {
-    return await database.collections['invite']
-    .updateOne(
-      {
-        'guild_id': guildId,
-        'client_id': clientId
-      },
-      {
-        '$inc': {
-          'invites': 1
+    return await database.collections['listener']
+      .updateOne(
+        {
+          'guild_id': listener.guildId,
+          'channel_source': listener.channelSource,
+          'channel_destination': listener.channelDestination,
+          'feature': listener.feature
+        },
+        {
+          '$set': {
+            'guild_id': listener.guildId,
+            'channel_source': listener.channelSource,
+            'channel_destination': listener.channelDestination,
+            'feature': listener.feature
+          }
+        },
+        {
+          'upsert': true
         }
-      },
-      {
-        'upsert': true
-      }
-    );
+      );
   }
 
-  static async updateInvited(
-    guildId: string,
-    clientId: string,
-    inviter: string
-  ): Promise<UpdateResult> {
-    return await database.collections['invite']
-    .updateOne(
-      {
-        'guild_id': guildId,
-        'client_id': clientId
-      },
-      {
-        '$set': {
-          'invited_by': inviter,
-          'invites': 0
+  static async deleteListener(
+    listener: IListener
+  ): Promise<DeleteResult> {
+    return await database.collections['listener']
+      .deleteOne(
+        {
+          'channel_source': listener.channelSource,
+          'channel_destination': listener.channelDestination,
+          'feature': listener.feature
         }
-      },
-      {
-        'upsert': true
-      }
-    );
+      );
   }
 }
 

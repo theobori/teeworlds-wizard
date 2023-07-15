@@ -22,7 +22,7 @@ export default async function sendDiscordRawImage(
   const embed = new EmbedBuilder()
     .setTitle(discordImage.title)
     .setImage('attachment://' + path)
-    .setColor(0x000000);
+    .setColor(0x2b2d31);
 
   await interaction.followUp(
     {

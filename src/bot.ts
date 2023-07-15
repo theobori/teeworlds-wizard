@@ -6,7 +6,7 @@ import {
 import { join } from 'path';
 
 import { CommandError, EventError } from './errors';
-import ICommand, { isICommand } from './interfaces/command';
+import ICommand, { isICommand } from './command';
 
 import { files } from './utils/files';
 

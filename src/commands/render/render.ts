@@ -8,96 +8,12 @@ import {
 } from 'discord.js';
 
 import Bot from '../../bot';
-import ICommand from '../../interfaces/command';
+import ICommand from '../../command';
 import parseCommandOptions from '../../utils/commandOptions';
 import { unlinkSync } from 'fs';
 import { SkinInteraction } from '../../services/renderSkin';
 import ErrorEmbed from '../../utils/msg';
-
-const eyeArgument: any = {
-  name: 'eyes',
-  type: ApplicationCommandOptionType.String,
-  required: false,
-  description: 'The skin eyes state',
-  choices: [
-    {
-      name: 'default',
-      value: 'default_eye'
-    }, 
-    {
-      name: 'angry',
-      value: 'angry_eye'
-    },
-    {
-      name: 'blink',
-      value: 'blink_eye'
-    },
-    {
-      name: 'happy',
-      value: 'happy_eye'
-    },
-    {
-      name: 'cross',
-      value: 'cross_eye'
-    },
-    {
-      name: 'scary',
-      value: 'scary_eye'
-    }
-  ]
-};
-
-const weaponArgument: any = {
-  name: 'weapon',
-  type: ApplicationCommandOptionType.String,
-  required: false,
-  description: 'The tee weapon',
-  choices: [
-    {
-      name: 'Hammer',
-      value: 'hammer'
-    }, 
-    {
-      name: 'Gun',
-      value: 'gun'
-    },
-    {
-      name: 'Shotgun',
-      value: 'shotgun'
-    },
-    {
-      name: 'Grenade',
-      value: 'grenade'
-    },
-    {
-      name: 'Laser',
-      value: 'laser'
-    }
-  ]
-};
-
-
-const colorModesArgument = {
-  name: 'colormode',
-  type: ApplicationCommandOptionType.String,
-  description: 'The skin color mode',
-  required: true,
-  choices: [
-    {
-      name: 'RGB',
-      value: 'rgb',
-      
-    }, 
-    {
-      name: 'HSL',
-      value: 'hsl'
-    },
-    {
-      name: 'Teeworlds code',
-      value: 'code',
-    }
-  ]
-};
+import { colorModesArgument, eyeArgument, weaponArgument } from '../../utils/commonArguments';
 
 const renderOptionalArguments = [
   {
@@ -136,7 +52,7 @@ export default class implements ICommand {
     this.options = [
       {
         name: 'default',
-        description: 'Render a Teeworlds skin ',
+        description: 'Render a Teeworlds skin',
         type: ApplicationCommandOptionType.Subcommand,
         options: [
           {
