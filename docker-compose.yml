@@ -5,6 +5,8 @@ services:
   asset_bot_mongo:
     image: mongo
     container_name: asset_bot_mongo
+    volumes:
+      - mongodb:/var/lib/mongodb
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
@@ -12,9 +14,22 @@ services:
 
   # Discord bot
   asset_bot:
-    build: .
+    image: node:18
+    container_name: asset_bot
+    working_dir: /bot
+    volumes:
+      - ./:/bot
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+    - |
+      npm i
+      npm run build
+      npm run start
     environment:
       MONGO: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@asset_bot_mongo?authSource=admin
     depends_on:
       - asset_bot_mongo
     restart: always
+
+volumes:
+  mongodb:

@@ -8,7 +8,9 @@ import {
   CommandInteractionOption,
   EmbedBuilder,
   GuildBasedChannel,
+  GuildMember,
   Message,
+  PermissionsBitField,
 } from 'discord.js';
 
 import {
@@ -20,10 +22,11 @@ import Bot from '../../bot';
 import ICommand from '../../command';
 import parseCommandOptions from '../../utils/commandOptions';
 import ErrorEmbed from '../../utils/msg';
-import { IListener, ListenerFeature, resolveChannel } from '../../services/listener';
+import { IListener, ListenerFeatureKind } from '../../services/listener';
 import RequestsDatabase from '../../services/database/requests';
 import AbstractPageComponent from '../../services/components/page';
 import capitalize from '../../utils/capitalize';
+import { resolveChannel } from '../../utils/channel';
 
 type EmbedDescriptor = {
   title: string,
@@ -113,11 +116,11 @@ const defaultArguments: any = [
     choices: [
       {
         name: 'Render a skin',
-        value: ListenerFeature.RENDER,
+        value: ListenerFeatureKind.RENDER,
       }, 
       {
         name: 'Create a skin board',
-        value: ListenerFeature.BOARD
+        value: ListenerFeatureKind.BOARD
       }
     ]
   }
@@ -330,7 +333,15 @@ export default class implements ICommand {
     const interaction = message as CommandInteraction<CacheType>;
     const options = parseCommandOptions(subCommand)
 
+    const author = message.member as GuildMember;
+    
     await interaction.deferReply({ ephemeral: true });
+
+    if (author.permissions.has(PermissionsBitField.Flags.Administrator) === false) {
+      message.reply({ embeds: [ErrorEmbed.missingPermission()] });
+  
+      return;
+    }
 
     const listener = {
       guildId: interaction.guildId,
@@ -346,11 +357,11 @@ export default class implements ICommand {
           listener
         );
 
-        const embed = ErrorEmbed.wrong(
-          'Only guild text channels are allowed'
-        );
-
         if (channels.length !== 2) {
+          const embed = ErrorEmbed.wrong(
+            'Only guild text channels are allowed'
+          );
+
           await interaction.followUp({ embeds: [ embed ] });
     
           return;

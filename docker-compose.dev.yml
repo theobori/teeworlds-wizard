@@ -5,6 +5,8 @@ services:
   asset_bot_mongo:
     image: mongo
     container_name: asset_bot_mongo
+    volumes:
+      - mongodb:/var/lib/mongodb
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
@@ -21,10 +23,12 @@ services:
     command:
     - |
       npm i
-      npm run build
-      npm run start
+      npm run dev
     environment:
       MONGO: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@asset_bot_mongo?authSource=admin
     depends_on:
       - asset_bot_mongo
     restart: on-failure
+
+volumes:
+  mongodb:

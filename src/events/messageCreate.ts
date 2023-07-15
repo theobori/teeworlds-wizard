@@ -1,35 +1,100 @@
 import {
-  // Attachment,
-  // AttachmentBuilder,
-  Message
+  Attachment,
+  AttachmentBuilder,
+  Collection,
+  Message, TextBasedChannel
 } from 'discord.js';
 
-// import { v4 as uuidv4 } from 'uuid';
-// import { Gameskin, Skin, createSkinOverview } from 'teeworlds-utilities';
+import { v4 as uuidv4 } from 'uuid';
+import { Gameskin, Skin, createSkinOverview } from 'teeworlds-utilities';
 
 import Bot from '../bot';
-// import { defaultGameskin } from '../services/renderSkin';
-// import { unlinkSync } from 'fs';
-// import RequestsDatabase from '../services/database/requests';
+import RequestsDatabase from '../services/database/requests';
+import { ListenerFeatureKind } from '../services/listener';
+import { defaultGameskin } from '../services/renderSkin';
+import { resolveChannel } from '../utils/channel';
+import { unlinkSync } from 'fs';
 
-// async function sendBoard(
-//   attachment: Attachment,
-//   path: string
-// ) {
-//   const url = attachment.url;
+async function buildBoard(
+  url: string,
+  path: string
+) {
+  const skin = new Skin();
+  const gameskin = new Gameskin();
 
-//   const skin = new Skin();
-//   const gameskin = new Gameskin();
-
-//   try {
-//     await skin.load(url);
-//     await gameskin.load(defaultGameskin);
-//   } catch (error) {
-//     return;
-//   }
+  try {
+    await skin.load(url);
+    await gameskin.load(defaultGameskin);
+  } catch {
+    return;
+  }
   
-//   createSkinOverview(skin, gameskin).saveAs(path, true);
-// }
+  createSkinOverview(skin, gameskin)
+    .saveAs(path, true);
+}
+
+async function buildRender(
+  url: string,
+  path: string
+) {
+  const skin = new Skin();
+
+  try {
+    await skin.load(url);
+  } catch {
+    return;
+  }
+
+  skin
+    .render()
+    .saveRenderAs(path, true);
+}
+
+async function buildFeatureImage(
+  url: string,
+  feature: ListenerFeatureKind
+): Promise<string> {
+  const path = uuidv4() + '.png';
+  
+  switch (feature) {
+    case ListenerFeatureKind.BOARD:
+      await buildBoard(url, path);
+      break;
+
+    case ListenerFeatureKind.RENDER:
+      await buildRender(url, path);
+      break;
+  
+    default:
+      break;
+  }
+
+  return path;
+}
+
+async function buildAttachments(
+  channel: TextBasedChannel,
+  attachments: Collection<string, Attachment>,
+  feature: ListenerFeatureKind
+  ) {
+  for (const [_, attachment] of attachments) {
+    // Build
+    const path = await buildFeatureImage(
+      attachment.url,
+      feature
+    );
+
+    // Output to the Discord text channel
+    await channel.send(
+      {
+        files: [ new AttachmentBuilder(path) ]
+      }
+    );
+
+    // Remove the file
+    unlinkSync(path);
+  }
+}
 
 export default async function messageCreate(
   _bot: Bot,
@@ -39,30 +104,37 @@ export default async function messageCreate(
     attachment => attachment.contentType === 'image/png'
   );
 
-  // let path: string;
-
-  if (attachments.size > 5 || message.author.bot) {
+  if (
+    attachments.size === 0 ||
+    attachments.size > 5 || 
+    message.author.bot
+  ) {
     return;
   }
 
-  // for (const [_, attachment] of attachments) {
-  //   path = uuidv4() + '.png';
+  // Get the channels
+  const listeners = RequestsDatabase.getListeners(
+    {
+      guildId: message.guildId,
+      channelSource: message.channelId
+    }
+  );
 
-  //   await sendBoard(attachment, path);
+  const documents = await listeners.toArray();
 
-  //   RequestsDatabase.getListeners(
-  //     {
-  //       guildId: message.guildId
-  //     }
-  //   )
+  // Outputs in every found listeners
+  for (const listener of documents) {
+    const id = listener.channel_destination;
 
-  //   // Selection de la feature
-  //   await message.channel.send(
-  //     {
-  //       files: [ new AttachmentBuilder(path) ]
-  //     }
-  //   );
+    const channel = await resolveChannel(
+      message,
+      id
+    ) as TextBasedChannel;
 
-  //   unlinkSync(path);
-  // }
+    await buildAttachments(
+      channel,
+      attachments,
+      listener.feature
+    );
+  }
 }
