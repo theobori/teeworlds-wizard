@@ -13,7 +13,7 @@ import RequestsDatabase from '../services/database/requests';
 import { ListenerFeatureKind } from '../services/listener';
 import { defaultGameskin } from '../services/renderSkin';
 import { resolveChannel } from '../utils/channel';
-import { unlinkSync } from 'fs';
+import { unlink } from 'fs/promises';
 
 async function buildBoard(
   url: string,
@@ -92,7 +92,7 @@ async function buildAttachments(
     );
 
     // Remove the file
-    unlinkSync(path);
+    await unlink(path);
   }
 }
 
