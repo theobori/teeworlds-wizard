@@ -1,4 +1,4 @@
-import { ColorHSL, ColorRGB, EyeSkinPart, IColor, Skin, SkinPart } from "teeworlds-utilities";
+import { ColorCode, ColorHSL, ColorRGB, EyeSkinPart, IColor, Skin, SkinPart } from "teeworlds-utilities";
 import { ParsedOptions } from "../utils/commandOptions";
 import { RGBTuple } from "discord.js";
 import { FileError } from "../errors";
@@ -33,6 +33,10 @@ const hslFromString = (color: string): ColorHSL => {
   return new ColorHSL(...getChannels(color, HSL_RE) as RGBTuple);
 }
 
+const codeFromString = (color: string): ColorCode => {
+  return new ColorCode(parseInt(color));
+}
+
 function colorFromString(
   color: string,
   colorKind: Color
@@ -47,7 +51,7 @@ function colorFromString(
       func = hslFromString;
       break;
     case Color.TeeworldsCode:
-      func = parseInt;
+      func = codeFromString;
       break;
     default:
       break;
