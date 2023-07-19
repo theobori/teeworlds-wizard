@@ -13,5 +13,6 @@ abstract class BaseError extends Error {
 export class CommandError extends BaseError { };
 export class EventError extends BaseError { };
 export class DBError extends BaseError { };
+export class AssetError extends BaseError { };
 
 export class FileError extends BaseError { };

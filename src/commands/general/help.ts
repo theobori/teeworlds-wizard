@@ -171,6 +171,7 @@ export default class implements ICommand {
 
     const embed = new EmbedBuilder()
       .setTitle(commandName)
+      .setColor(0x2b2d31)
       .addFields({ name: 'Description', value: command.description });
     
     if (command.extraDescription) {

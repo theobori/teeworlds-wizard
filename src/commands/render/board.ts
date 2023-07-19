@@ -32,7 +32,7 @@ const renderOptionalArguments: any = [
     name: 'gameskin',
     type: ApplicationCommandOptionType.Attachment,
     required: false,
-    description: 'The skin image (it takes priority over the url)',
+    description: 'The skin image',
   },
   {
     name: 'amount',
@@ -63,7 +63,7 @@ export default class implements ICommand {
             name: 'image',
             type: ApplicationCommandOptionType.Attachment,
             required: true,
-            description: 'The skin image (it takes priority over the url)',
+            description: 'The skin image',
           },
           ...renderOptionalArguments
         ]
@@ -77,7 +77,7 @@ export default class implements ICommand {
             name: 'image',
             type: ApplicationCommandOptionType.Attachment,
             required: true,
-            description: 'The skin image (it takes priority over the url)',
+            description: 'The skin image',
           },
           colorModesArgument,
           {

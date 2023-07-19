@@ -83,3 +83,28 @@ export const colorModesArgument = {
     }
   ]
 };
+
+export const assetKindArgument: any = {
+  name: 'assetkind',
+  type: ApplicationCommandOptionType.String,
+  description: 'The asset kind',
+  required: true,
+  choices: [
+    {
+      name: 'Skin',
+      value: 'skin',
+    },
+    {
+      name: 'Gameskin',
+      value: 'gameskin'
+    },
+    {
+      name: 'Emoticon',
+      value: 'emoticon',
+    },
+    {
+      name: 'Particule',
+      value: 'particule',
+    },
+  ]
+};
