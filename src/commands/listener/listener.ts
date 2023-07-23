@@ -338,7 +338,7 @@ export default class implements ICommand {
     await interaction.deferReply({ ephemeral: true });
 
     if (author.permissions.has(PermissionsBitField.Flags.Administrator) === false) {
-      message.reply({ embeds: [ErrorEmbed.missingPermission()] });
+      interaction.followUp({ embeds: [ErrorEmbed.missingPermission()] });
   
       return;
     }
