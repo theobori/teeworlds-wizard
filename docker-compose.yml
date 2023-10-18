@@ -14,7 +14,7 @@ services:
 
   # Discord bot
   asset_bot:
-    image: node:18
+    image: teeworlds_wizard
     container_name: asset_bot
     build: .
     environment:
