@@ -8,7 +8,7 @@ EmbedBuilder,
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { Gameskin, Skin, SkinWeapon, createSkinOverview } from 'teeworlds-utilities';
+import { Gameskin, Skin, SkinFull, createSkinOverview } from 'teeworlds-utilities';
 
 import { WeaponGameSkinPart } from 'teeworlds-utilities/build/main/asset/part';
 import { ParsedOptions } from '../utils/commandOptions';
@@ -80,7 +80,7 @@ abstract class AbstractSkinInteraction implements ISkinInteraction {
 }
 
 export class SkinInteraction extends AbstractSkinInteraction {
-  private skinWeapon: SkinWeapon;
+  private skinWeapon: SkinFull;
   
   protected gameskin: Gameskin;
   protected hasWeapon: boolean;
@@ -89,7 +89,7 @@ export class SkinInteraction extends AbstractSkinInteraction {
     super()
 
     this.gameskin = new Gameskin();
-    this.skinWeapon = new SkinWeapon();
+    this.skinWeapon = new SkinFull();
     this.hasWeapon = false;
   }
 
