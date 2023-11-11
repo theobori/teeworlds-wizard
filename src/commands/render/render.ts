@@ -13,7 +13,7 @@ import parseCommandOptions from '../../utils/commandOptions';
 import { unlinkSync } from 'fs';
 import { SkinInteraction } from '../../services/renderSkin';
 import ErrorEmbed from '../../utils/msg';
-import { colorModesArgument, eyeArgument, weaponArgument } from '../../utils/commonArguments';
+import { EmoticonPartArgument, colorModesArgument, eyeArgument, weaponArgument } from '../../utils/commonArguments';
 
 const renderOptionalArguments = [
   {
@@ -33,9 +33,16 @@ const renderOptionalArguments = [
     name: 'gameskin',
     type: ApplicationCommandOptionType.Attachment,
     required: false,
-    description: 'The skin image',
+    description: 'The optional gameskin image',
   },
-  eyeArgument
+  eyeArgument,
+  {
+    name: 'emoticon',
+    type: ApplicationCommandOptionType.Attachment,
+    required: false,
+    description: 'The optional emoticon image',
+  },
+  EmoticonPartArgument
 ];
 
 export default class implements ICommand {

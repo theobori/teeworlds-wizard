@@ -1,4 +1,6 @@
-import { ApplicationCommandOptionType } from "discord.js";
+import { ApplicationCommandOptionType } from 'discord.js';
+import { EmoticonPart } from 'teeworlds-utilities';
+import capitalize from './capitalize';
 
 export const eyeArgument: any = {
   name: 'eyes',
@@ -9,6 +11,10 @@ export const eyeArgument: any = {
     {
       name: 'default',
       value: 'default_eye'
+    },
+    {
+      name: 'pain',
+      value: 'pain_eye'
     }, 
     {
       name: 'angry',
@@ -107,4 +113,27 @@ export const assetKindArgument: any = {
       value: 'particule',
     },
   ]
+};
+
+function argumentFromEnum<T extends { [key: number]: string }>(e: T): any {
+  let ret = []
+
+  for (let [k, v] of Object.entries(e)) {
+    ret.push(
+      {
+        'name': capitalize(k.toLowerCase()),
+        'value': v
+      }
+    )
+  }
+
+  return ret
+}
+
+export const EmoticonPartArgument: any = {
+  name: 'emoticonpart',
+  type: ApplicationCommandOptionType.String,
+  description: 'The emoticon part',
+  required: false,
+  choices: argumentFromEnum(EmoticonPart)
 };

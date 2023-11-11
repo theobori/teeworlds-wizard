@@ -8,13 +8,14 @@ EmbedBuilder,
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { Gameskin, Skin, SkinFull, createSkinOverview } from 'teeworlds-utilities';
+import { Emoticon, Gameskin, Skin, SkinFull, createSkinOverview } from 'teeworlds-utilities';
 
-import { WeaponGameSkinPart } from 'teeworlds-utilities/build/main/asset/part';
 import { ParsedOptions } from '../utils/commandOptions';
 import configSkin from './configSkin';
+import { WeaponGameSkinPart } from 'teeworlds-utilities/build/main/asset/part';
 
 export const defaultGameskin = 'data/0_6.png';
+export const defaultEmoticon = 'data/emoticon.png';
 
 export interface ISkinInteraction {
   path: string;
@@ -85,16 +86,21 @@ export class SkinInteraction extends AbstractSkinInteraction {
   protected gameskin: Gameskin;
   protected hasWeapon: boolean;
 
+  protected emoticon: Emoticon;
+  protected hasEmoticon: boolean;
+
   constructor() {
     super()
 
     this.gameskin = new Gameskin();
+    this.emoticon = new Emoticon();
     this.skinWeapon = new SkinFull();
+
     this.hasWeapon = false;
+    this.hasEmoticon = false;
   }
 
   private async configGameskin(): Promise<boolean> {
-    // Check for weapon
     if (this.options.weapon) {
       this.skinWeapon.setWeapon(
         this.options.weapon as WeaponGameSkinPart
@@ -103,7 +109,6 @@ export class SkinInteraction extends AbstractSkinInteraction {
       this.hasWeapon = true;
     }
 
-    // Check for custom gameskin
     const path = this.options.gameskin
       ? this.options.gameskin.url
       : defaultGameskin;
@@ -119,38 +124,88 @@ export class SkinInteraction extends AbstractSkinInteraction {
     return true;
   }
 
-  async load(): Promise<boolean> {
-    // Set the skin and its url
-    if (await super.load() === false) {
-      return false;
+  private async configEmoticon(): Promise<boolean> {
+    if (this.options.emoticonpart) {
+      this.skinWeapon.setEmoticonPart(
+        this.options.emoticonpart
+      );
+
+      this.hasEmoticon = true;
     }
-    
-    // Set the gameskin
+
+    const path = this.options.emoticon
+      ? this.options.emoticon.url
+      : defaultEmoticon;
+  
+    try {
+      await this.emoticon.load(path);
+    } catch (error) {
+      return false
+    }
+
+    this.emoticon.setName(path);
+
+    return true;
+  }
+
+  private async loadGameskin(): Promise<boolean> {
     if (await this.configGameskin() === false) {
       return false;
     }
   
     if (this.hasWeapon === true) {
-      this.skinWeapon
-        .setSkin(this.skin)
-        .setGameskin(this.gameskin);
+      this.skinWeapon.setGameskin(this.gameskin);
     }
+
+    return true;
+  }
+
+  private async loadEmoticon(): Promise<boolean>{
+    if (await this.configEmoticon() === false) {
+      return false;
+    }
+  
+    if (this.hasEmoticon === true) {
+      this.skinWeapon.setEmoticon(this.emoticon);
+      this.skinWeapon.setGameskin(this.gameskin);
+    }
+
+    return true;
+  }
+
+  async load(): Promise<boolean> {
+    // Set the skin and its url
+    if (await super.load() === false) {
+      return false;
+    }
+
+    this.skinWeapon.setSkin(this.skin);
     
+    if (await this.loadGameskin() === false) {
+      return false;
+    }
+
+    if (await this.loadEmoticon() === false) {
+      return false;
+    }
+
     this.isCrop = this.options.crop || false;
     
     return true;
   }
 
   async process() {
-    if (this.hasWeapon === true) {
+    if (this.hasWeapon === true || this.hasEmoticon === true) {
       this.skinWeapon
         .process()
         .saveAs(this.path, this.isCrop);
-    } else {
-      this.skin
-        .render()
-        .saveRenderAs(this.path, this.isCrop);
+      
+        return;
     }
+
+    this.skin
+      .render()
+      .saveRenderAs(this.path, this.isCrop);
   }
 
   async send() {
@@ -164,6 +219,7 @@ export class SkinInteraction extends AbstractSkinInteraction {
     
     const skinUrl = this.skin.metadata.name;
     const gamekinUrl = this.gameskin.metadata.name;
+    const emoticonUrl = this.emoticon.metadata.name;
 
     embed.addFields(
       {
@@ -181,6 +237,19 @@ export class SkinInteraction extends AbstractSkinInteraction {
         {
           name: 'Gameskin',
           value: `[link](${gamekinUrl})`,
+          inline: true
+        }
+      ])
+    }
+
+    if (
+      this.hasEmoticon === true &&
+      this.emoticon.metadata.name !== defaultEmoticon
+    ) {
+      embed.addFields([
+        {
+          name: 'Emoticon',
+          value: `[link](${emoticonUrl})`,
           inline: true
         }
       ])
