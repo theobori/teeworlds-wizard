@@ -8,7 +8,6 @@ COPY \
     package.json \
     package-lock.json \
     tsconfig.json \
-    .env \
     ./
 
 # Install dependencies and build

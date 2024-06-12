@@ -17,8 +17,9 @@ services:
     image: teeworlds_wizard
     container_name: asset_bot
     build: .
+    env_file: .env
     environment:
-      MONGO: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@asset_bot_mongo?authSource=admin
+      MONGO_URI: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@asset_bot_mongo?authSource=admin
     depends_on:
       - asset_bot_mongo
     restart: always

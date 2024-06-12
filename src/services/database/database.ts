@@ -20,8 +20,8 @@ export default class Mongo {
     }
 
     try {
-      const client = new MongoClient(process.env.MONGO);
-      const db = client.db(process.env.DATABASE);
+      const client = new MongoClient(process.env.MONGO_URI);
+      const db = client.db(process.env.MONGO_DATABASE);
       const collections = {
         'listener': db.collection('listener')
       };
