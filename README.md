@@ -1,6 +1,6 @@
-# ✂️ teeworlds-wizard
+# ♥️ teeworlds-wizard
 
-![build](https://github.com/theobori/teeworlds-wizard/actions/workflows/build.yml/badge.svg)
+![build](https://github.com/Teeskins/teedata-discord-bot/actions/workflows/build.yml/badge.svg)
 
 ## 📖 Build and run
 
@@ -10,15 +10,29 @@ You only need one of the following requirements:
   - 18.x
   - 20.x
 
-You need a `.env` file, you can copy `.example.env` and fill the missing values.
+### Environment variables
+
+This is a description of the needed environment variable for the application at runtime, at least, for the "initialization" step.
+
+| Name | Description | Mandatory |
+| -- | -- | -- |
+| TOKEN | Discord Bot token | Yes |
+| MONGO_URI | MongoDB URI connection (see the Docker Compose file for example) | Yes |
+| MONGO_INITDB_ROOT_USERNAME | MongoDB root username | Yes |
+| MONGO_INITDB_ROOT_PASSWORD | MongoDB root password | Yes |
+| MONGO_DATABASE | MongoDB database name | No |
+| LOG_DIR | Application logs directory | No |
 
 ### Standalone container
 
 You can use the `Dockerfile` at the project root, but you will need a MongoDB isntance anyway.
+The container will need the above environment variables.
 
 ### With Docker Compose
 
-The containers need the following environment variables:
+The production Docker Compose file uses a `.env` file, you can create one with the above environment variables.
+
+The Docker Compose file need the following environment variables:
 - `MONGO_INITDB_ROOT_USERNAME`
 - `MONGO_INITDB_ROOT_PASSWORD`
 
@@ -38,4 +52,3 @@ docker compose up -d
 ## 🤝 Contribute
 
 If you want to help the project, you can follow the guidelines in [CONTRIBUTING.md](./CONTRIBUTING.md).
-
