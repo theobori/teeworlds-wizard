@@ -26,7 +26,7 @@
     "fs": "^0.0.1-security",
     "mongoose": "^6.5.2",
     "path": "^0.12.7",
-    "teeworlds-utilities": "^1.2.13",
+    "teeworlds-utilities": "^1.2.14",
     "ts-node": "^10.9.1",
     "uuid": "^9.0.0"
   }
